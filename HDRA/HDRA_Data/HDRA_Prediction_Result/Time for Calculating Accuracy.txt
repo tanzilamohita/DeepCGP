@@ -1,0 +1,4 @@
+HDRA_Raw : 6830.28 sec
+HDRA_Comp_1 : 3324.65 sec
+HDRA_Comp_2 : 759.48 sec
+HDRA_Comp_3 : 211.14 sec

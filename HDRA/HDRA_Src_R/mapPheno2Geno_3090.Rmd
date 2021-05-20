@@ -1,0 +1,76 @@
+---
+title: "map marker genoetypes to phenotypes"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2020/12/3"
+output: html_document
+---
+
+required packages
+```{r}
+require(here)
+```
+
+read data.
+```{r}
+geno_1 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_1_CompressedData.csv"))
+geno_2 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_2_CompressedData.csv"))
+geno_3 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_3_CompressedData.csv"))
+pheno <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "RiceDiversityPheno4GWASGS.csv"), row.names = 1)
+```
+
+get column names of geno datasets.
+```{r}
+geno.colname <- colnames(geno_3)
+```
+
+extract required parts of IDs for marker genotype data.
+```{r}
+tmp <- strsplit(geno.colname, "[.]")
+geno.accname <- sapply(tmp, function(x){return(x[3])})
+geno.accid <- sapply(tmp, function(x){return(x[4])})
+```
+
+extract required parts of IDs for phenotype data.
+```{r}
+tmp <- strsplit(rownames(pheno), c("[.]"))
+tmp <- sapply(tmp, function(x){return(x[1])})
+tmp <- strsplit(tmp, c("@"))
+pheno.accid <- sapply(tmp, function(x){return(x[2])})
+```
+
+Check the overlap between geno and pheno.
+```{r}
+match <- pheno.accid %in% geno.accid
+sum(!match)
+```
+all phenotypic data are matched to the geno data.
+
+choose accessions in pheno data from geno data and reorder them.
+```{r}
+geno_1_sel <- geno_1
+colnames(geno_1_sel) <- geno.accid
+geno_1_sel <- geno_1_sel[, pheno.accid]
+ 
+geno_2_sel <- geno_2
+colnames(geno_2_sel) <- geno.accid
+geno_2_sel <- geno_2_sel[, pheno.accid]
+
+geno_3_sel <- geno_3
+colnames(geno_3_sel) <- geno.accid
+geno_3_sel <- geno_3_sel[, pheno.accid]
+```
+
+check the size of selected data.
+```{r}
+dim(geno_1_sel)
+dim(geno_2_sel)
+dim(geno_3_sel)
+```
+
+output the selected and reordered data.
+```{r}
+write.csv(geno_1_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_1_CompressedData_Pheno.csv"), quote = F)
+write.csv(geno_2_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_2_CompressedData_Pheno.csv"), quote = F)
+write.csv(geno_3_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_3_CompressedData_Pheno.csv"), quote = F)
+```
+

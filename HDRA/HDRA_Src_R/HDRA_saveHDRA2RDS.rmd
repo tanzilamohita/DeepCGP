@@ -1,0 +1,44 @@
+---
+title: "save HDRA2RDS"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2/25/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+require(ranger)
+require(gaston)
+require(here)
+require(tictoc)
+```
+
+# data preparation
+
+```{r}
+hdra.org <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.csv"))
+head(hdra.org[,1:5])
+```
+```{r}
+hdra.t <- t(hdra.org)
+head(hdra.t[,1:6])
+```
+
+```{r}
+hdra <- hdra.t
+#rownames(hdra) <- hdra.t[,1]
+dim(hdra)
+head(hdra[,1:5])
+```
+
+```{r}
+saveRDS(hdra, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.rds"))
+```
+
+```{r}
+tic()
+hdra2 <- readRDS(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.rds"))
+toc()
+```
+

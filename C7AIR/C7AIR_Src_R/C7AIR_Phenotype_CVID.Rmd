@@ -1,0 +1,49 @@
+---
+title: "Preparation of Phenotype CVID (C7AIR)"
+author: "Tanzila Islam"
+date: "3/4/2021"
+output: html_document
+---
+
+```{r}
+require(ranger)
+require(here)
+```
+read phenotype data
+```{r}
+pheno <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Phenotype.csv"), row.names = 1)
+head(pheno)
+```
+check the dimension of phenotype data
+```{r}
+dim(pheno)
+```
+generate cv.ids
+```{r}
+n.fold <- 10
+n.rep <- 5
+n.sample <- nrow(pheno)
+cv.id <- matrix(NA, nrow = n.sample, ncol = n.rep) 
+for(i in 1:n.rep) {
+  cv.id[,i] <- sample(1:n.sample %% n.fold) + 1
+}
+rownames(cv.id) <- rownames(pheno)
+colnames(cv.id) <- paste0("CV", 1:n.rep)
+```
+read the cvid
+```{r}
+head(cv.id)
+```
+save the cvid
+```{r}
+write.csv(cv.id, here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Pheno_CVID.csv"), quote = F)
+```
+
+
+
+
+
+
+
+
+

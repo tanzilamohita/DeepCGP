@@ -1,0 +1,153 @@
+---
+title: "Random Forest Regression for Compressed data of HDRA"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "3/11/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+require(ranger)
+#require(gaston)
+require(here)
+require(tictoc)
+require(missForest)
+```
+
+# data preparation
+
+read genome-wide marker genotype data *only for obtaining sample names*
+```{r}
+hdra.org <- readRDS(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002_score.rds"))
+```
+
+read compressed marker genotype data
+```{r}
+hdra.cmp <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.csv"))
+```
+
+check the size of data
+```{r}
+dim(hdra.org)
+dim(hdra.cmp)
+```
+
+transpose the compressed data.
+```{r}
+hdra.cmp <- t(hdra.cmp)
+```
+
+check the column names.
+```{r}
+colnames(hdra.cmp)
+```
+
+ranger requires the column names (names of variables)
+```{r}
+colnames(hdra.cmp) <- sprintf("V%05d", 1:ncol(hdra.cmp))
+head(colnames(hdra.cmp))
+tail(colnames(hdra.cmp))
+```
+OK!
+
+check the names of the samples
+```{r}
+hdra.cmp.name <- rownames(hdra.cmp)
+tmp.cmp <- sub("[.]", "@", substring(hdra.cmp.name, 1, nchar(hdra.cmp.name) - 2))
+hdra.org.name <- rownames(hdra.org)
+tmp.org <- substring(hdra.org.name, 1, nchar(hdra.org.name) - 2)
+unmatch <- tmp.cmp != tmp.org
+table(unmatch)
+```
+
+11 samples do not match between two datasets.
+
+For 11s, check one by one
+```{r}
+data.frame(tmp.cmp[unmatch], tmp.org[unmatch])
+```
+
+They are the same samples with fluctuated substitution of :: and @.
+
+copy the original names to the compressed data
+```{r}
+rownames(hdra.cmp) <- rownames(hdra.org)
+```
+
+read phenotypic data.
+```{r}
+pheno <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA_Pheno_sel.csv"), row.names = 1)
+```
+
+read cross-validation ids.
+```{r}
+cv.id <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA_Pheno_CVID.csv"), row.names = 1)
+```
+
+# prepare snps data
+
+```{r}
+hdra <- hdra.cmp[rownames(pheno), ]
+hdra <- hdra[, apply(hdra, 2, sd) > 0]
+dim(hdra)
+```
+
+# prepare independent variables (638,274 SNPs!)
+
+```{r}
+X <- as.matrix(hdra)
+```
+
+# genomic prediction
+
+```{r}
+tic()
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  print(colnames(pheno)[trait.id])
+
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in 1:ncol(this.cv.id)) {
+    for(j in 1:max(this.cv.id)) {
+      print(paste(i, j))
+      is.train <- this.cv.id[,i] != j
+      y.train <- y[is.train]
+      X.train <- this.X[is.train, ]
+      X.test <- this.X[!is.train, ]
+      
+      model <- ranger(x = X.train, y = y.train)
+      if(is.vector(X.test)) X.test <- t(as.matrix(X.test))
+      y.pred[names(y), i][!is.train] <- predict(model, X.test)$predictions
+    }
+  }
+  y.out[[trait.id]] <- data.frame(y.obs = pheno[, trait.id], y.pred)
+  pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+  y.predresult[[trait.id]] <- data.frame(pred.acc)
+  print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+output data
+```{r}
+saveRDS(y.out, 
+        here("HDRA/HDRA_Data/HDRA_Prediction_Result", "HDRA_PredictedOutput_Compress_3.rds"))
+```
+output data as csv
+```{r}
+write.csv(y.out, here("HDRA/HDRA_Data/HDRA_Prediction_Result",  "HDRA_PredictedOutput_Compress_3.csv"), quote = F)
+```
+output prediction accuracy 
+```{r}
+write.csv(y.predresult, here("HDRA/HDRA_Data/HDRA_Prediction_Result",  "HDRA_PredictionAccuracy_Compress_3.csv"), quote = F)
+```

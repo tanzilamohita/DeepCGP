@@ -1,0 +1,118 @@
+---
+title: "Random Forest Regression (Ranger) for C7AIR Compressed Data"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2/26/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+require(ranger)
+#require(gaston)
+require(here)
+require(tictoc)
+require(missForest)
+```
+
+# data preparation
+
+read genome-wide marker genotype data.
+```{r}
+c7AIR.cmp <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_CompressedData", "C7AIR_Compress_2_Pheno.csv"))
+c7AIR.cmp <- t(c7AIR.cmp)
+head(c7AIR.cmp[,1:6])
+dim(c7AIR.cmp)
+```
+```{r}
+colnames(c7AIR.cmp)
+```
+ranger requires the column names (names of variables)
+```{r}
+colnames(c7AIR.cmp) <- sprintf("V%05d", 1:ncol(c7AIR.cmp))
+head(colnames(c7AIR.cmp))
+tail(colnames(c7AIR.cmp))
+```
+read phenotypic data.
+```{r}
+pheno <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Phenotype.csv"), row.names = 1)
+pheno <- na.omit(pheno)
+head(pheno)
+#dim(pheno)
+```
+
+read cross-validation ids.
+```{r}
+cv.id <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Pheno_CVID.csv"), row.names = 1)
+head(cv.id[,1:5])
+```
+# prepare snps data
+
+```{r}
+c7AIR <- c7AIR.cmp[rownames(pheno), ]
+c7AIR <- c7AIR[, apply(c7AIR, 2, sd) > 0]
+dim(c7AIR)
+```
+
+# prepare independent variables (638,274 SNPs!)
+
+```{r}
+X <- as.matrix(c7AIR)
+head(X[,1:5])
+dim(X)
+```
+
+# genomic prediction
+
+```{r}
+tic()
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  print(colnames(pheno)[trait.id])
+
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in 1:ncol(this.cv.id)) {
+    for(j in 1:max(this.cv.id)) {
+      print(paste(i, j))
+      is.train <- this.cv.id[,i] != j
+      y.train <- y[is.train]
+      X.train <- this.X[is.train, ]
+      X.test <- this.X[!is.train, ]
+      # print(dim(X.train))
+      # print(dim(y.train))
+      model <- ranger(x = X.train, y = y.train)
+      if(is.vector(X.test)) X.test <- t(as.matrix(X.test))
+      y.pred[names(y), i][!is.train] <- predict(model, X.test)$predictions
+    }
+  }
+  y.out[[trait.id]] <- data.frame(y.obs = pheno[, trait.id], y.pred)
+  pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+  y.predresult[[trait.id]] <- data.frame(pred.acc)
+  print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+
+output data
+```{r}
+saveRDS(y.out,
+        here("C7AIR/C7AIR_Data/C7AIR_Prediction_Result", "C7AIR_PredictedOutput_Compress_2.rds"))
+```
+output data as csv
+```{r}
+write.csv(y.out, here("C7AIR/C7AIR_Data/C7AIR_Prediction_Result",  "C7AIR_PredictedOutput_Compress_2.csv"), quote = F)
+```
+output prediction accuracy
+```{r}
+write.csv(y.predresult, here("C7AIR/C7AIR_Data/C7AIR_Prediction_Result",  "C7AIR_PredictionAccuracy_Compress_2.csv"), quote = F)
+```

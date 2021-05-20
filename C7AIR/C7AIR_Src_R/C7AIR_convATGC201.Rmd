@@ -1,0 +1,54 @@
+---
+title: "Convert ATGC201 (C7AIR)"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2/28/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+#require(ranger)
+#require(gaston)
+require(here)
+#require(tictoc)
+#require(Matrix)
+```
+
+# data preparation
+
+read genome-wide marker genotype data.
+```{r}
+C7AIR <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Genotype_Pheno.csv"))
+C7AIR <- t(C7AIR)
+head(C7AIR[,1:5])
+```
+```{r}
+dim(C7AIR)
+```
+# convert ATGC to 0 and 1, and NA to average value of 0s and 1s
+
+```{r}
+X <- matrix(NA, nrow(C7AIR), ncol(C7AIR))
+for(i in 1:ncol(C7AIR)) {
+  tmp <- C7AIR[, i]
+  tmp[tmp == "NA"] <- NA
+  if(i %% 10000 == 0) print(i)
+  score <- as.numeric(as.factor(tmp)) - 1
+  score[is.na(score)] <- mean(score, na.rm = T)
+  X[, i] <- score
+}
+rownames(X) <- rownames(C7AIR)
+colnames(X) <- colnames(C7AIR)
+```
+
+Save the converted data
+```{r}
+head(X[,1:20])
+dim(X)
+saveRDS(X, here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Score.rds"))
+```
+output data as csv
+```{r}
+write.csv(X, here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Score.csv"), quote = F)
+```

@@ -1,0 +1,45 @@
+---
+title: "Convert ATGC201"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2/28/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+#require(ranger)
+#require(gaston)
+require(here)
+#require(tictoc)
+#require(Matrix)
+```
+
+# data preparation
+
+read genome-wide marker genotype data.
+```{r}
+hdra <- readRDS(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002.rds"))
+```
+
+# convert ATGC to 0 and 1, and NA to average value of 0s and 1s
+
+```{r}
+X <- matrix(NA, nrow(hdra), ncol(hdra))
+for(i in 1:ncol(hdra)) {
+  tmp <- hdra[, i]
+  tmp[tmp == "N"] <- NA
+  if(i %% 10000 == 0) print(i)
+  score <- as.numeric(as.factor(tmp)) - 1
+  score[is.na(score)] <- mean(score, na.rm = T)
+  X[, i] <- score
+}
+rownames(X) <- rownames(hdra)
+colnames(X) <- colnames(hdra)
+```
+
+Save the converted data
+```{r}
+saveRDS(X, here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002_score.rds"))
+```
+
