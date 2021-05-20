@@ -9,11 +9,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-hdra_accuracy = pd.read_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/HDRA_PredictionAccuracy.csv',
+hdra_accuracy = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/HDRA_PredictionAccuracy.csv',
                             low_memory=False).iloc[0:4, 1:-1]
 hdra_accuracy = hdra_accuracy.transpose()
 # print(hdra_accuracy)
-# hdra_accuracy.to_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+# hdra_accuracy.to_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
 #                    'HDRA_Prediction_Accuracy_T.csv', float_format='%1.3f',
 #                      header=('0%', '57%', '93%', '98%'))
 
@@ -33,7 +33,7 @@ for traits, accuracy in hdra_accuracy.iterrows():
 
 rel_acc_all = pd.DataFrame(rel_acc_all, columns=('0%', '57%', '93%', '98%'), index=traits_all)
 print(rel_acc_all)
-rel_acc_all.to_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+rel_acc_all.to_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                    'HDRA_Prediction_RelativeAccuracy.csv', float_format='%1.3f')
 
 

@@ -71,7 +71,7 @@ for i in range(len(split_input)):
     # deep autoencoder
     input = Input(shape=(split_input[i].shape[1],))
     print('Shape of input layer data: ', index, input.shape)
-    np.savetxt('../HDRA_Data/HDRA_Zero_OneHot/HDRA_Zero_OneHot_{}'.format(index)
+    np.savetxt('../HDRA_Data/HDRA_OneHot/HDRA_OneHot_{}'.format(index)
                + '.csv', split_input[i], delimiter=",", fmt='%1.0f')
     index += 1
 

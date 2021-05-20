@@ -9,13 +9,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-hdra_raw = pd.read_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+hdra_raw = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                        'HDRA_PredictionAccuracyProcessed_Raw.csv', low_memory=False)
-hdra_comp1 = pd.read_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+hdra_comp1 = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_1.csv', low_memory=False)
-hdra_comp2 = pd.read_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+hdra_comp2 = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_2.csv', low_memory=False)
-hdra_comp3 = pd.read_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+hdra_comp3 = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_3.csv', low_memory=False)
 
 # hdra_raw_mean = hdra_raw.mean(axis=0)
@@ -65,7 +65,7 @@ accuracy_df.columns = list(hdra_raw)[1:10]
 # accuracy_df.columns = list(hdra_raw)[10:19]
 accuracy_df.columns = accuracy_df.columns.str.replace('.', ' ')
 print(accuracy_df)
-# accuracy_df.to_csv('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+# accuracy_df.to_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
 #                        'HDRA_PredictionAccuracy.csv')
 
 accuracy_df.plot(kind="bar", figsize=(15, 10), rot=0, width=0.8)
@@ -78,9 +78,9 @@ plt.ylabel("Accuracy (%)", fontsize=18)
 plt.legend(loc='lower right', fontsize=12)
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=12)
-plt.savefig('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
                        'HDRA_PredictionAccuracy_1-9.png')
-# plt.savefig('../HDRA_Data/HDRA_Zero_Prediction_Accuracy/'
+# plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
 #                        'HDRA_PredictionAccuracy_10-18.png')
 plt.show()
 

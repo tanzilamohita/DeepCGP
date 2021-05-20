@@ -17,7 +17,7 @@ require(tictoc)
 # data preparation
 
 ```{r}
-hdra.org <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.csv"))
+hdra.org <- read.csv(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Compress_3.csv"))
 head(hdra.org[,1:5])
 ```
 ```{r}
@@ -33,12 +33,12 @@ head(hdra[,1:5])
 ```
 
 ```{r}
-saveRDS(hdra, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.rds"))
+saveRDS(hdra, here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Compress_3.rds"))
 ```
 
 ```{r}
 tic()
-hdra2 <- readRDS(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Compress_3.rds"))
+hdra2 <- readRDS(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Compress_3.rds"))
 toc()
 ```
 

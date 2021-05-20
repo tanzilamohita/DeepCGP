@@ -27,7 +27,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # model will be trained on GPU 0, if it is -1, GPU will not use for training
 
 # load Compressed Data
-compressed_fileList = natsorted(glob.glob("../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_1/HDRA_Zero_Net_1_EncData/"+"*.csv"))
+compressed_fileList = natsorted(glob.glob("../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_1/HDRA_Net_1_EncData/"+"*.csv"))
 compressed_fileList = compressed_fileList[0:20]
 print("Number of CSV Files: ", len(compressed_fileList))
 print(compressed_fileList)
@@ -100,10 +100,10 @@ for i in range(len(x)):
     autoencoder.summary()
     # the structure of the encoder
     encoder.summary()
-    # plot_model(encoder, to_file='../HDRA_Data/HDRA_ModelMetadata/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_FlowGraph/'
-    #                                 'HDRA_Zero_Net_2_EncFlowGraph_{}'.format(index) + '.png', show_shapes=True)
-    # plot_model(autoencoder, to_file='../HDRA_Data/HDRA_ModelMetadata/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_FlowGraph/'
-    #                                'HDRA_Zero_Net_2_FlowGraph_{}'.format(index) + '.png', show_shapes=True)
+    # plot_model(encoder, to_file='../HDRA_Data/HDRA_ModelMetadata/HDRA_Net_2/HDRA_Net_2_FlowGraph/'
+    #                                 'HDRA_Net_2_EncFlowGraph_{}'.format(index) + '.png', show_shapes=True)
+    # plot_model(autoencoder, to_file='../HDRA_Data/HDRA_ModelMetadata/HDRA_Net_2/HDRA_Net_2_FlowGraph/'
+    #                                'HDRA_Net_2_FlowGraph_{}'.format(index) + '.png', show_shapes=True)
     # # compiling the autoencoder model with adam optimizer.
     adm = keras.optimizers.Adam(lr=0.001)
     # As One Hot Encoded Data has a value of 0 0r 1 we use binary_crossentropy as the loss function
@@ -119,7 +119,7 @@ for i in range(len(x)):
     # predicting the test using encoder
     enc_out = encoder.predict(data)
     # save encoded data into CSV file
-    np.savetxt('../HDRA_Data/HDRA_ModelMetadata/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_EncData/HDRA_Zero_Net_2_EncData_{}'.format(index)
+    np.savetxt('../HDRA_Data/HDRA_ModelMetadata/HDRA_Net_2/HDRA_Net_2_EncData/HDRA_Net_2_EncData_{}'.format(index)
                + '.csv', enc_out, delimiter=",", fmt='%1.0f')
 
     # reconstructing the input from autoencoder
@@ -128,11 +128,11 @@ for i in range(len(x)):
     print(dec_out)
 
     # save decoded data into CSV file
-    np.savetxt('../HDRA_Data/HDRA_ModelMetadata/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_DecData/HDRA_Zero_Net_2_DecData_{}'.format(index)
+    np.savetxt('../HDRA_Data/HDRA_ModelMetadata/HDRA_Net_2/HDRA_Net_2_DecData/HDRA_Net_2_DecData_{}'.format(index)
                + '.csv', dec_out, delimiter=",", fmt='%1.0f')
     # np.savetxt('Test/Analog_Output_fmt.csv', dec_out, delimiter=",", fmt='%1.0f')
     # save model
-    filename = '../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_Model/HDRA_Zero_Net_2_Model_{}'.format(
+    filename = '../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_2/HDRA_Net_2_Model/HDRA_Net_2_Model_{}'.format(
         index) + '.h5'
     autoencoder.save(filename)
     score = autoencoder.evaluate(x_test, x_test, verbose=0)
@@ -163,24 +163,24 @@ for i in range(len(x)):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'valid'], loc='upper left')
-    plt.savefig('../HDRA_Data/HDRA_ModelMetadata/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_Plot/HDRA_Zero_Net_2_PlotLoss_{}'.format(index) + '.png')
+    plt.savefig('../HDRA_Data/HDRA_ModelMetadata/HDRA_Net_2/HDRA_Net_2_Plot/HDRA_Net_2_PlotLoss_{}'.format(index) + '.png')
     # plt.show()
     plt.clf()
     index += 1
 
-np.savetxt('../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_Evaluate/'
-           'HDRA_Zero_Net_2_Evaluate.csv', evaluate, delimiter=',',
+np.savetxt('../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_2/HDRA_Net_2_Evaluate/'
+           'HDRA_Net_2_Evaluate.csv', evaluate, delimiter=',',
            fmt='%1.3f', comments='', header='Loss')
-np.savetxt('../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_MSE/'
-           'HDRA_Zero_Net_2_MSE.csv', mse_loss, delimiter=',',
+np.savetxt('../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_2/HDRA_Net_2_MSE/'
+           'HDRA_Net_2_MSE.csv', mse_loss, delimiter=',',
            fmt='%1.5f', comments='', header='MSE Loss')
 
-pathlib.Path("../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_Time/"
-        "HDRA_Zero_Net_2_TrainingTime.txt")\
-        .write_text("HDRA_Zero_Net_2_Training_Time: {}"
+pathlib.Path("../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_2/HDRA_Net_2_Time/"
+        "HDRA_Net_2_TrainingTime.txt")\
+        .write_text("HDRA_Net_2_Training_Time: {}"
         .format(time.time() - start_time))
-pathlib.Path("../HDRA_Data/HDRA_ModelMetaData/HDRA_Zero/HDRA_Zero_Net_2/HDRA_Zero_Net_2_MSE/"
-        "HDRA_Zero_Net_2_MSE.txt").write_text("HDRA Zero Net_2 Mean MSE Loss: {}"
+pathlib.Path("../HDRA_Data/HDRA_ModelMetaData/HDRA_Net_2/HDRA_Net_2_MSE/"
+        "HDRA_Net_2_MSE.txt").write_text("HDRA Net_2 Mean MSE Loss: {}"
         .format(mean(mse_loss)))
 
 print("MSE Loss: ", mean(mse_loss))

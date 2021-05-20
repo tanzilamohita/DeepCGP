@@ -12,9 +12,9 @@ require(here)
 
 read data.
 ```{r}
-geno_1 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_1_CompressedData.csv"))
-geno_2 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_2_CompressedData.csv"))
-geno_3 <- read.csv(here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_3_CompressedData.csv"))
+geno_1 <- read.csv(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_1_CompressedData.csv"))
+geno_2 <- read.csv(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_2_CompressedData.csv"))
+geno_3 <- read.csv(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_3_CompressedData.csv"))
 pheno <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "RiceDiversityPheno4GWASGS.csv"), row.names = 1)
 ```
 
@@ -69,8 +69,8 @@ dim(geno_3_sel)
 
 output the selected and reordered data.
 ```{r}
-write.csv(geno_1_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_1_CompressedData_Pheno.csv"), quote = F)
-write.csv(geno_2_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_2_CompressedData_Pheno.csv"), quote = F)
-write.csv(geno_3_sel, here("HDRA/HDRA_Data/HDRA_Zero_CompressedData", "HDRA_Zero_Net_3_CompressedData_Pheno.csv"), quote = F)
+write.csv(geno_1_sel, here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_1_CompressedData_Pheno.csv"), quote = F)
+write.csv(geno_2_sel, here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_2_CompressedData_Pheno.csv"), quote = F)
+write.csv(geno_3_sel, here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Net_3_CompressedData_Pheno.csv"), quote = F)
 ```
 
