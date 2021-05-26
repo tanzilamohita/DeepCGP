@@ -109,5 +109,6 @@ The **HDRA_Src_R** folder contains **R** script of DeepCGP model.
 
 **5. Prediction Accuracy Plot**
 
-We calculate the relative accuracy for different compression levels and generate a plot using **HDRA_Ranger_Prediction_Plot.py**.
+  We calculate the relative accuracy for different compression levels and generate a plot using **HDRA_Ranger_Prediction_Plot.py**.
+  
 ---
