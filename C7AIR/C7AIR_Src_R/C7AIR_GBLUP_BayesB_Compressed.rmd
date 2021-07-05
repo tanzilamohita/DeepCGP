@@ -1,0 +1,185 @@
+---
+title: "BayesianRegressionUsingBGLR"
+author: Tanzila
+date: 5/26/2021
+output: html_notebook
+---
+
+### required packages
+
+First, load packages required for the analysis.
+```{r}
+require(BGLR) # package for Bayesian regression
+require(here) # convert a relative path to a absolute path to a file
+require(tictoc)
+```
+### Read data.
+
+read genome-wide marker genotype data *only for obtaining sample names*
+```{r}
+c7AIR.org <- readRDS(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Score.rds"))
+```
+
+# data preparation
+
+read genome-wide marker genotype data.
+```{r}
+c7AIR.cmp <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_CompressedData", "C7AIR_Compress_1_Pheno.csv"))
+c7AIR.cmp <- t(c7AIR.cmp)
+head(c7AIR.cmp[,1:6])
+dim(c7AIR.cmp)
+```
+check the size of data
+```{r}
+dim(c7AIR.org)
+dim(c7AIR.cmp)
+```
+
+check the column names.
+```{r}
+colnames(c7AIR.cmp)
+```
+```{r}
+colnames(c7AIR.cmp) <- sprintf("V%05d", 1:ncol(c7AIR.cmp))
+head(colnames(c7AIR.cmp))
+tail(colnames(c7AIR.cmp))
+```
+OK!
+
+### preparation of phenotypic data
+
+Read phenotypic data.
+```{r}
+pheno <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Phenotype.csv"), row.names = 1)
+pheno <- na.omit(pheno)
+head(pheno)
+#dim(pheno)
+```
+read cross-validation ids.
+```{r}
+cv.id <- read.csv(here("C7AIR/C7AIR_Data/C7AIR_Raw", "C7AIR_Pheno_CVID.csv"), row.names = 1)
+head(cv.id[,1:5])
+```
+```{r}
+c7AIR <- c7AIR.cmp[rownames(pheno), ]
+c7AIR <- c7AIR[, apply(c7AIR, 2, sd) > 0]
+dim(c7AIR)
+```
+
+compare the order of rows of *pheno* with *gmat.score*.
+```{r}
+sum(rownames(pheno) == rownames(c7AIR))
+nrow(pheno)
+```
+
+All the rows of *pheno* are arranged in the same order as *c7AIR*.
+
+### Bayesian regression
+
+```{r}
+X <- as.matrix(c7AIR)
+head(X[,1:5])
+dim(X)
+```
+
+189 genotypes by 303 markers
+
+#### Gaussian process
+
+Gaussian process regression based on a genomic relationship matrix (a linear kernel).
+```{r}
+grm <- tcrossprod(scale(X)) / ncol(X)
+grm[1:6, 1:6]
+```
+```{r}
+dim(grm)
+```
+Perform cross-validation with Gaussian process regression.
+```{r}
+tic()
+#X <- X[, 1:100]
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  print(colnames(pheno)[trait.id])
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in seq_len(ncol(this.cv.id))) {
+  	for(j in 1:max(this.cv.id)) {
+      print(paste(i, j))
+      is.test <- this.cv.id[,i] == j
+      y.train <- y
+      y.train[is.test] <- NA
+      eta <- list(list(K = grm, model = "RKHS"))
+      #model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+      #			  verbose = F, saveAt = here("temp", "bglr_")) <- MCMC chain is too short.
+      model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+					  verbose = F, saveAt = here("temp", "bglr_"))
+      y.pred[names(y), i][is.test] <- model$yHat[is.test]
+     }
+  }
+  y.out[[trait.id]] <- data.frame(pheno[, trait.id], y.pred)
+  pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+  y.predresult[[trait.id]] <- data.frame(pred.acc)
+  print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+output GBLUP prediction accuracy
+```{r}
+write.csv(y.predresult, here("C7AIR/C7AIR_Data/C7AIR_Prediction_Accuracy",  "C7AIR_PredictionAccuracy_Compress_2_GBLUP.csv"), quote = F)
+```
+
+### Bayes B regression
+
+```{r}
+#X <- X[, 1:100]
+tic()
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  print(colnames(pheno)[trait.id])
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in 1:ncol(this.cv.id)) {
+  	for(j in 1:max(this.cv.id)) {
+      print(paste(i, j))
+      is.test <- this.cv.id[,i] == j
+      y.train <- y
+      y.train[is.test] <- NA
+#     eta <- list(list(X = X, model = "BayesB")) <- X should be this.X
+      eta <- list(list(X = this.X, model = "BayesB"))
+      #model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+#					  verbose = F, saveAt = here("temp", "bglr_")) <- MCMC chain is too short.
+      model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+					  verbose = F, saveAt = here("temp", "bglr_"))
+      #y.pred[is.test] <- model$yHat[is.test]
+      y.pred[names(y), i][is.test] <- model$yHat[is.test]
+     }
+  }
+  y.out[[trait.id]] <- data.frame(pheno[, trait.id], y.pred)
+  pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+  y.predresult[[trait.id]] <- data.frame(pred.acc)
+  print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+
+output BayesB prediction accuracy
+```{r}
+write.csv(y.predresult, here("C7AIR/C7AIR_Data/C7AIR_Prediction_Accuracy",  "C7AIR_PredictionAccuracy_Compress_2_BayesB.csv"), quote = F)
+```

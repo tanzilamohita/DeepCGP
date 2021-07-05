@@ -71,7 +71,6 @@ y.predresult <- vector("list", ncol(pheno))
 names(y.out) <- colnames(pheno)
 for(trait.id in 1:ncol(pheno)) {
   print(colnames(pheno)[trait.id])
-
   y <- pheno[, trait.id]
   names(y) <- rownames(pheno)
   y <- na.omit(y)

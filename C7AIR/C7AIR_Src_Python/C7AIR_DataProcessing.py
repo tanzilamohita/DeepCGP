@@ -8,7 +8,6 @@
 from keras import Input
 import numpy as np
 import pandas as pd
-from sklearn.impute import SimpleImputer
 
 # loading data
 def SevenkArray_GenData():

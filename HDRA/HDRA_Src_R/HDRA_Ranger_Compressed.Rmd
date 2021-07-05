@@ -25,6 +25,7 @@ hdra.org <- readRDS(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AG
 read compressed marker genotype data
 ```{r}
 hdra.cmp <- read.csv(here("HDRA/HDRA_Data/HDRA_CompressedData", "HDRA_Compress_3.csv"))
+
 ```
 
 check the size of data
@@ -92,7 +93,9 @@ hdra <- hdra.cmp[rownames(pheno), ]
 hdra <- hdra[, apply(hdra, 2, sd) > 0]
 dim(hdra)
 ```
-
+```{r}
+head(hdra)
+```
 # prepare independent variables (638,274 SNPs!)
 
 ```{r}

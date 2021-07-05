@@ -1,0 +1,154 @@
+---
+title: "BayesianRegressionUsingBGLR"
+author: Tanzila
+date: 5/26/2021
+output: html_notebook
+---
+
+### required packages
+
+First, load packages required for the analysis.
+```{r}
+require(BGLR) # package for Bayesian regression
+require(here) # convert a relative path to a absolute path to a file
+require(tictoc)
+```
+### Read data.
+
+```{r}
+HDRA.org <- readRDS(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002_score.rds"))
+head(HDRA.org[,1:6])
+dim(HDRA.org)
+```
+
+The size of the data 189 x 7098.
+
+```{r}
+colnames(HDRA.org)
+```
+```{r}
+colnames(HDRA.org) <- sprintf("V%05d", 1:ncol(HDRA.org))
+head(colnames(HDRA.org))
+tail(colnames(HDRA.org))
+```
+### preparation of phenotypic data
+
+Read phenotypic data.
+```{r}
+pheno <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA_Pheno_sel.csv"), row.names = 1)
+pheno <- na.omit(pheno)
+head(pheno)
+#dim(pheno)
+```
+read cross-validation ids.
+```{r}
+cv.id <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA_Pheno_CVID.csv"), row.names = 1)
+head(cv.id[,1:5])
+```
+```{r}
+HDRA <- HDRA.org[rownames(pheno), ]
+HDRA <- HDRA[, apply(HDRA, 2, sd) > 0]
+dim(HDRA)
+```
+
+compare the order of rows of *pheno* with *gmat.score*.
+```{r}
+sum(rownames(pheno) == rownames(HDRA))
+nrow(pheno)
+```
+
+All the rows of *pheno* are arranged in the same order as *HDRA*.
+
+### Bayesian regression
+
+```{r}
+X <- as.matrix(HDRA)
+head(X[,1:5])
+dim(X)
+```
+
+189 genotypes by 6414 markers
+
+#### Gaussian process
+
+Gaussian process regression based on a genomic relationship matrix (a linear kernel).
+```{r}
+grm <- tcrossprod(scale(X)) / ncol(X)
+grm[1:6, 1:6]
+```
+
+Perform cross-validation with Gaussian process regression.
+```{r}
+tic()
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  print(colnames(pheno)[trait.id])
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in 1:ncol(this.cv.id)) {
+  	for(j in 1:max(this.cv.id)) {
+        print(paste(i, j))
+		is.test <- this.cv.id[,i] == j
+		y.train <- y
+		y.train[is.test] <- NA
+        eta <- list(list(K = grm, model = "RKHS"))
+		model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+					  verbose = F, saveAt = here("temp", "bglr_"))
+		y.pred[is.test] <- model$yHat[is.test]
+     }
+  }
+	y.out[[trait.id]] <- data.frame(pheno[, trait.id], y.pred)
+	pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+	y.predresult[[trait.id]] <- data.frame(pred.acc)
+	print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+
+
+### Bayes B regression
+
+
+```{r}
+tic()
+y.out <- vector("list", ncol(pheno))
+y.predresult <- vector("list", ncol(pheno))
+names(y.out) <- colnames(pheno)
+for(trait.id in 1:ncol(pheno)) {
+  #print(colnames(pheno)[trait.id])
+  y <- pheno[, trait.id]
+  names(y) <- rownames(pheno)
+  y <- na.omit(y)
+  this.cv.id <- cv.id[names(y), ]
+  this.X <- X[names(y), ]
+  y.pred <- matrix(NA, nrow(pheno), ncol(cv.id))
+  rownames(y.pred) <- rownames(pheno)
+  colnames(y.pred) <- colnames(cv.id)
+  for(i in 1:ncol(this.cv.id)) {
+  	for(j in 1:max(this.cv.id)) {
+        #print(paste(i, j))
+		is.test <- this.cv.id[,i] == j
+        X.test <- this.X[!is.train, ]
+		y.train <- y
+        eta <- list(list(X = X, model = "BayesB"))
+		model <- BGLR(y = y.train, ETA = eta, nIter = 5000, burnIn = 1000,
+					  verbose = F, saveAt = here("temp", "bglr_"))
+		y.pred[is.test] <- model$yHat[is.test]
+     }
+  }
+  y.out[[trait.id]] <- data.frame(pheno[, trait.id], y.pred)
+  pred.acc <- cor(y.out[[trait.id]], use = "pair")[1,]
+  y.predresult[[trait.id]] <- data.frame(pred.acc)
+  print(cor(y.out[[trait.id]], use = "pair")[1,])
+}
+toc()
+```
+

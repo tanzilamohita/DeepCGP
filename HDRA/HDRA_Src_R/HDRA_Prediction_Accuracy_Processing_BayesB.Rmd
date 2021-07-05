@@ -1,0 +1,55 @@
+---
+title: "HDRA Prediction Accuracy Processing BayesB"
+author: "Tanzila Islam"
+date: "3/11/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+require(ranger)
+#require(gaston)
+require(here)
+#require(tictoc)
+require(missForest)
+```
+
+
+read phenotypic data.
+```{r}
+pheno.read <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA_Pheno_sel.csv"), row.names = 1)
+colnames(pheno.read)
+```
+read accuracy raw data
+```{r}
+# hdra.acc <- read.csv(here("HDRA/HDRA_Data/HDRA_Prediction_Result", "HDRA_PredictionAccuracy_Raw.csv"), row.names = 1)
+# colnames(hdra.acc) <- colnames(pheno.read)
+# hdra.acc <- hdra.acc[-1,]
+# print(hdra.acc)
+# write.csv(hdra.acc, here("HDRA/HDRA_Data/HDRA_Prediction_Result",  "HDRA_PredictionAccuracyProcessed_Raw.csv"), quote = F)
+```
+read accuracy comp_1
+```{r}
+# comp1.acc <- read.csv(here("HDRA/HDRA_Data/HDRA_Prediction_Result", "HDRA_PredictionAccuracy_Compress_1.csv"), row.names = 1)
+# colnames(comp1.acc) <- colnames(pheno.read)
+# comp1.acc <- comp1.acc[-1,]
+# print(comp1.acc)
+# write.csv(comp1.acc, here("HDRA/HDRA_Data/HDRA_Prediction_Result",  "HDRA_PredictionAccuracyProcessed_Compress_1.csv"), quote = F)
+```
+read accuracy comp_2
+```{r}
+comp2.acc <- read.csv(here("HDRA/HDRA_Data/HDRA_Prediction_Accuracy", "HDRA_PredictionAccuracy_Compress_2_BayesB.csv"), row.names = 1)
+colnames(comp2.acc) <- colnames(pheno.read)
+comp2.acc <- comp2.acc[-1,]
+print(comp2.acc)
+write.csv(comp2.acc, here("HDRA/HDRA_Data/HDRA_Prediction_Accuracy",  "HDRA_PredictionAccuracyProcessed_Compress_2_BayesB.csv"), quote = F)
+```
+read accuracy comp_3
+```{r}
+comp3.acc <- read.csv(here("HDRA/HDRA_Data/HDRA_Prediction_Accuracy", "HDRA_PredictionAccuracy_Compress_3_BayesB.csv"), row.names = 1)
+colnames(comp3.acc) <- colnames(pheno.read)
+comp3.acc <- comp3.acc[-1,]
+print(comp3.acc)
+write.csv(comp3.acc, here("HDRA/HDRA_Data/HDRA_Prediction_Accuracy",  "HDRA_PredictionAccuracyProcessed_Compress_3_BayesB.csv"), quote = F)
+```
