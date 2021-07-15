@@ -2,8 +2,9 @@
 # Tanzila Islam
 # PhD Student, Iwate University
 # Email: tanzilamohita@gmail.com
-# Created Date: 7/9/2021
+# Created Date: 6/10/2021
 # ===============================
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -108,9 +109,8 @@ print(accuracy_df)
 # # # accuracy_df.to_csv('../../../Data/C7AIR/C7AIR_Prediction_Accuracy/'
 # # #                         'C7AIR_PredictionAccuracy.csv')
 # #
-# ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6,
-#                  yerr=[C7AIR_SD_BayesB, C7AIR_SD_gblup, C7AIR_SD_RF])
-ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6)
+ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6,
+                 yerr=[C7AIR_SD_BayesB, C7AIR_SD_gblup, C7AIR_SD_RF])
 plt.title("Prediction Accuracy of BayesB, GBLUP and RF (C7AIR)", fontsize=24)
 plt.xlabel("Compression Level", fontsize=18)
 plt.ylabel("Accuracy (%)", fontsize=18)
@@ -125,5 +125,6 @@ for p in ax.patches:
 # # plt.savefig('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
 # #                        'C7AIR_PredictionAccuracy.png')
 plt.savefig('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
-                         'C7AIR_PredictionAccuracy_Ranger_GBLUP_BayesB.png')
+                         'C7AIR_PredictionAccuracy_Ranger_GBLUP_BayesB_withErrorBar.png')
 plt.show()
+

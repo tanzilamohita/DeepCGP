@@ -7,14 +7,14 @@ HDRA_Comp_3 : 211.14 sec
 
 GBLUP:
 
-HDRA_Raw:  sec
+HDRA_Raw:  8197.42 sec
 HDRA_Comp_1 :  7985.92 sec
 HDRA_Comp_2 : 7954.11 sec
 HDRA_Comp_3 :  7941.43 sec
 
 BayesB:
 
-HDRA_Raw:  sec
-HDRA_Comp_1 :  sec
+HDRA_Raw:  522805.16 sec 6d:01h:13m:25s
+HDRA_Comp_1 :  622891.79 sec 7d:05h:01m:31s (Average Time per Traits)
 HDRA_Comp_2 :  164383.69 sec
 HDRA_Comp_3 :  32240.27 sec

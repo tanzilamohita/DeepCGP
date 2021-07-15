@@ -2,7 +2,7 @@
 # Tanzila Islam
 # PhD Student, Iwate University
 # Email: tanzilamohita@gmail.com
-# Created Date: 6/19/2021
+# Created Date: 7/9/2021
 # ===============================
 
 import pandas as pd
@@ -128,9 +128,7 @@ print(accuracy_df)
 # # # #                         'HDRA_PredictionAccuracy.csv')
 # # #
 
-# ax = accuracy_df.plot(kind="bar", yerr=[HDRA_SD_BayesB, HDRA_SD_gblup, HDRA_SD_RF],
-#                  figsize=(16, 12), rot=0, capsize=6)
-ax = accuracy_df.plot(kind="bar",
+ax = accuracy_df.plot(kind="bar", yerr=[HDRA_SD_BayesB, HDRA_SD_gblup, HDRA_SD_RF],
                  figsize=(16, 12), rot=0, capsize=6)
 plt.title("Prediction Accuracy of BayesB, GBLUP and RF (HDRA)", fontsize=24)
 plt.xlabel("Compression Level", fontsize=18)
@@ -148,6 +146,6 @@ for p in ax.patches:
 # plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
 #                         'HDRA_PredictionRelativeAccuracy_Ranger_GBLUP_BayesB.png')
 plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
-                        'HDRA_PredictionAccuracy_BayesB_GBLUP_RF.png')
+                        'HDRA_PredictionAccuracy_BayesB_GBLUP_RF_EB.png')
 plt.show()
 
