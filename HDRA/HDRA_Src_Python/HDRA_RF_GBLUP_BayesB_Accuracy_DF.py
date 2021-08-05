@@ -19,11 +19,17 @@ HDRA_comp2_ranger = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
 HDRA_comp3_ranger = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_3.csv', low_memory=False)
 
+# # set height of bar
+# HDRA_raw_mean_ranger = list(HDRA_raw_ranger.mean(axis=0)*100)
+# HDRA_comp1_mean_ranger= list(HDRA_comp1_ranger.mean(axis=0)*100)
+# HDRA_comp2_mean_ranger = list(HDRA_comp2_ranger.mean(axis=0)*100)
+# HDRA_comp3_mean_ranger = list(HDRA_comp3_ranger.mean(axis=0)*100)
+
 # set height of bar
-HDRA_raw_mean_ranger = list(HDRA_raw_ranger.mean(axis=0)*100)
-HDRA_comp1_mean_ranger= list(HDRA_comp1_ranger.mean(axis=0)*100)
-HDRA_comp2_mean_ranger = list(HDRA_comp2_ranger.mean(axis=0)*100)
-HDRA_comp3_mean_ranger = list(HDRA_comp3_ranger.mean(axis=0)*100)
+HDRA_raw_mean_ranger = list(HDRA_raw_ranger.mean(axis=0))
+HDRA_comp1_mean_ranger= list(HDRA_comp1_ranger.mean(axis=0))
+HDRA_comp2_mean_ranger = list(HDRA_comp2_ranger.mean(axis=0))
+HDRA_comp3_mean_ranger = list(HDRA_comp3_ranger.mean(axis=0))
 
 HDRA_Traits = list(HDRA_raw_ranger.columns)
 del HDRA_Traits[0]
@@ -46,23 +52,29 @@ accuracy_df_ranger = pd.DataFrame(accuracy_df_ranger, index=HDRA_Traits,
 #                         'HDRA_PredictionAccuracy_RF_DF.csv', float_format='%1.2f')
 
 # processing GBLUP Prediction Accuracy
-# HDRA_raw_gblup = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
-#                        'HDRA_PredictionAccuracy_Raw_GBLUP.csv', low_memory=False)
+HDRA_raw_gblup = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
+                       'HDRA_PredictionAccuracyProcessed_Raw_GBLUP.csv', low_memory=False)
 HDRA_comp1_gblup = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_1_GBLUP.csv', low_memory=False)
 HDRA_comp2_gblup = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_2_GBLUP.csv', low_memory=False)
 HDRA_comp3_gblup = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_3_GBLUP.csv', low_memory=False)
+#
+# # set height of bar
+# # HDRA_raw_mean_gblup = list(HDRA_raw_gblup.mean(axis=0)*100)
+# HDRA_comp1_mean_gblup= list(HDRA_comp1_gblup.mean(axis=0)*100)
+# HDRA_comp2_mean_gblup = list(HDRA_comp2_gblup.mean(axis=0)*100)
+# HDRA_comp3_mean_gblup = list(HDRA_comp3_gblup.mean(axis=0)*100)
 
 # set height of bar
-# HDRA_raw_mean_gblup = list(HDRA_raw_gblup.mean(axis=0)*100)
-HDRA_comp1_mean_gblup= list(HDRA_comp1_gblup.mean(axis=0)*100)
-HDRA_comp2_mean_gblup = list(HDRA_comp2_gblup.mean(axis=0)*100)
-HDRA_comp3_mean_gblup = list(HDRA_comp3_gblup.mean(axis=0)*100)
+HDRA_raw_mean_gblup = list(HDRA_raw_gblup.mean(axis=0))
+HDRA_comp1_mean_gblup= list(HDRA_comp1_gblup.mean(axis=0))
+HDRA_comp2_mean_gblup = list(HDRA_comp2_gblup.mean(axis=0))
+HDRA_comp3_mean_gblup = list(HDRA_comp3_gblup.mean(axis=0))
 
-compression_level_gblup = ['57%', '93%', '98%']
-accuracy_data_gblup = [HDRA_comp1_mean_gblup, HDRA_comp2_mean_gblup,
+compression_level_gblup = ['0%', '57%', '93%', '98%']
+accuracy_data_gblup = [HDRA_raw_mean_gblup, HDRA_comp1_mean_gblup, HDRA_comp2_mean_gblup,
                        HDRA_comp3_mean_gblup]
 accuracy_df_gblup = pd.DataFrame(np.column_stack(accuracy_data_gblup))
 # accuracy_df_gblup = accuracy_df_gblup.transpose()
@@ -85,15 +97,21 @@ HDRA_comp2_BayesB = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
 HDRA_comp3_BayesB = pd.read_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
                          'HDRA_PredictionAccuracyProcessed_Compress_3_BayesB.csv', low_memory=False)
 
-# set height of bar
-# HDRA_raw_mean_BayesB = list(HDRA_raw_BayesB.mean(axis=0)*100)
-HDRA_comp1_mean_BayesB = list(HDRA_comp1_BayesB.mean(axis=0)*100)
-HDRA_comp2_mean_BayesB = (HDRA_comp2_BayesB.mean(axis=0)*100)
-HDRA_comp3_mean_BayesB = list(HDRA_comp3_BayesB.mean(axis=0)*100)
+# # set height of bar
+# # HDRA_raw_mean_BayesB = list(HDRA_raw_BayesB.mean(axis=0)*100)
+# HDRA_comp1_mean_BayesB = list(HDRA_comp1_BayesB.mean(axis=0)*100)
+# HDRA_comp2_mean_BayesB = (HDRA_comp2_BayesB.mean(axis=0)*100)
+# HDRA_comp3_mean_BayesB = list(HDRA_comp3_BayesB.mean(axis=0)*100)
 # print(list(HDRA_comp3_BayesB.mean(axis=0)*100))
 
-compression_level_BayesB = ['57%', '93%', '98%']
-accuracy_data_BayesB = [HDRA_comp1_mean_BayesB, HDRA_comp2_mean_BayesB,
+# set height of bar
+HDRA_raw_mean_BayesB = [0]*18
+HDRA_comp1_mean_BayesB = list(HDRA_comp1_BayesB.mean(axis=0))
+HDRA_comp2_mean_BayesB = (HDRA_comp2_BayesB.mean(axis=0))
+HDRA_comp3_mean_BayesB = list(HDRA_comp3_BayesB.mean(axis=0))
+
+compression_level_BayesB = ['0%', '57%', '93%', '98%']
+accuracy_data_BayesB = [HDRA_raw_mean_BayesB, HDRA_comp1_mean_BayesB, HDRA_comp2_mean_BayesB,
                         HDRA_comp3_mean_BayesB]
 accuracy_df_BayesB = pd.DataFrame(np.column_stack(accuracy_data_BayesB))
 # accuracy_df_BayesB = accuracy_df_BayesB.transpose()
@@ -110,6 +128,16 @@ accuracy_df_BayesB = pd.DataFrame(accuracy_df_BayesB, columns=compression_level_
 #                         axis=1, sort=False)
 # print(accuracy_df)
 #Prediction_Methods = ['BayesB', 'GBLUP', 'RF']
+arrays_comp0 = [['0%', '0%', '0%'], ['BayesB', 'GBLUP', 'RF']]
+tuples_comp0 = list(zip(*arrays_comp0))
+index_comp0 = pd.MultiIndex.from_tuples(tuples_comp0)
+
+HDRA_comp0 = [HDRA_raw_mean_BayesB, HDRA_raw_mean_gblup, HDRA_raw_mean_ranger]
+HDRA_comp0 = pd.DataFrame(np.column_stack(HDRA_comp0))
+HDRA_comp0 = np.array(HDRA_comp0)
+HDRA_comp0 = pd.DataFrame(HDRA_comp0, columns=index_comp0,
+                                  index=HDRA_Traits)
+
 arrays_comp1 = [['57%', '57%', '57%'], ['BayesB', 'GBLUP', 'RF']]
 tuples_comp1 = list(zip(*arrays_comp1))
 index_comp1 = pd.MultiIndex.from_tuples(tuples_comp1)
@@ -144,8 +172,10 @@ HDRA_comp3 = pd.DataFrame(HDRA_comp3, columns=index_comp3,
 
 #print(HDRA_comp3)
 
-HDRA_DF = pd.concat([HDRA_comp1, HDRA_comp2, HDRA_comp3],
+HDRA_DF = pd.concat([HDRA_comp0, HDRA_comp1, HDRA_comp2, HDRA_comp3],
                         axis=1, sort=False)
 print(HDRA_DF)
 # HDRA_DF.to_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
 #                         'HDRA_BayesB_GBLUP_RF.csv', float_format='%1.2f')
+HDRA_DF.to_csv('../HDRA_Data/HDRA_Prediction_Accuracy/'
+                         'HDRA_BayesB_GBLUP_RF_Covariant.csv', float_format='%1.2f')

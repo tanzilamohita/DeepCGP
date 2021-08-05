@@ -37,11 +37,17 @@ hdra_comp3_mean = hdra_comp3.mean(axis=0)
 barWidth = 0.25
 # fig = plt.subplots(figsize=(12, 8))
 
+# # set height of bar
+# hdra_raw_list = list(hdra_raw_mean*100)
+# hdra_comp1_list = list(hdra_comp1_mean*100)
+# hdra_comp2_list = list(hdra_comp2_mean*100)
+# hdra_comp3_list = list(hdra_comp3_mean*100)
+
 # set height of bar
-hdra_raw_list = list(hdra_raw_mean*100)
-hdra_comp1_list = list(hdra_comp1_mean*100)
-hdra_comp2_list = list(hdra_comp2_mean*100)
-hdra_comp3_list = list(hdra_comp3_mean*100)
+hdra_raw_list = list(hdra_raw_mean)
+hdra_comp1_list = list(hdra_comp1_mean)
+hdra_comp2_list = list(hdra_comp2_mean)
+hdra_comp3_list = list(hdra_comp3_mean)
 
 # hdra_raw_list = [hdra_raw_mean[0]*100, hdra_comp1_mean[0]*100, hdra_comp2_mean[0]*100, hdra_comp3_mean[0]*100]
 # hdra_comp1_list = [hdra_raw_mean[1]*100, hdra_comp1_mean[1]*100, hdra_comp2_mean[1]*100, hdra_comp3_mean[1]*100]
@@ -78,7 +84,7 @@ plt.title("GBLUP Prediction Accuracy for HDRA", fontsize=24) #(Traits 1-9)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.xlabel("Trait Id", fontsize=18)
-plt.ylabel("Accuracy (%)", fontsize=18)
+plt.ylabel("Accuracy", fontsize=18)
 plt.legend(fontsize=12, loc='upper right')
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=12)
