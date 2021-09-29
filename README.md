@@ -1,10 +1,10 @@
-# DeepCGP: A Deep Learning Method to Predict Phenotype of Rice from Compressed Genome-wide Polymorphisms 
+# DeepCGP: A Deep Learning Method to Compress Genome-wide Polymorphisms for Predicting Phenotype of Rice  
 
 ### Tanzila Islam
 
 ##### Graduate School of Science & Engineering, Iwate University, Japan
 
-We introduce DeepCGP which can compress genome-wide polymorphism data and predict phenotypes of rice from that compressed information. The DeepCGP model consists of two parts: (i) an autoencoder model based on deep neural networks to compress genome-wide polymorphism data, and (ii) a Random Forest regression model to predict phenotype from that compressed information. To demonstrate the usage of this model, we apply two real genomic datasets with genotypes and phenotypes measured in Rice. We show that the DeepCGP model can achieve up to 99% prediction accuracy after 98% compression. Our model DeepCGP outperforms state-of-the-art methods in both compression and prediction.  
+A Deep Learning Compression-based Genomic Prediction (DeepCGP) model that can compress genome-wide polymorphism data and predict phenotypes of a target trait from compressed information was proposed. The DeepCGP model contained two parts: (i) an autoencoder model based on deep neural networks to compress genome-wide polymorphism data, and (ii) regression models based on random forests (RF), genomic best linear unbiased prediction (GBLUP), and Bayesian variable selection (BayesB) to predict phenotypes from compressed information. Two datasets with genome-wide marker genotypes and target trait phenotypes in rice were applied. The DeepCGP model obtained up to 99% prediction accuracy after 98% compression. BayesB required extensive computational time among the three methods, and showed the highest accuracy; however, BayesB could only be used with compressed data. Overall, DeepCGP outperformed state-of-the-art methods in terms of both compression and prediction.  
 
 Availability of Datasets: You can access the dataset from [here](https://drive.google.com/drive/folders/1Fyws-1A8AH7Nt6jKAokxbMGNh1S3KSkx?usp=sharing).
 
