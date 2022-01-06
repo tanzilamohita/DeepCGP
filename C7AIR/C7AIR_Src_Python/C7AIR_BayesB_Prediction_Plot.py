@@ -2,20 +2,18 @@
 # Tanzila Islam
 # PhD Student, Iwate University
 # Email: tanzilamohita@gmail.com
-# Created Date: 3/15/2021
+# Created Date: 1/6/2022
 # ===============================
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 C7AIR_raw = pd.read_csv('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
-                       'C7AIR_PredictionAccuracy_Raw.csv', low_memory=False)
+                       'C7AIR_PredictionAccuracy_Raw_BayesB.csv', low_memory=False)
 C7AIR_comp1 = pd.read_csv('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
-                         'C7AIR_PredictionAccuracy_Compress_1.csv', low_memory=False)
+                         'C7AIR_PredictionAccuracy_Compress_1_BayesB.csv', low_memory=False)
 C7AIR_comp2 = pd.read_csv('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
-                         'C7AIR_PredictionAccuracy_Compress_2.csv', low_memory=False)
+                         'C7AIR_PredictionAccuracy_Compress_2_BayesB.csv', low_memory=False)
 
 C7AIR_raw_mean = C7AIR_raw.mean(axis=0)
 C7AIR_comp1_mean = C7AIR_comp1.mean(axis=0)
@@ -47,7 +45,7 @@ print(accuracy_df)
 #
 accuracy_df.plot(kind="bar", figsize=(12, 8), rot=0)
 # plt.title("Prediction Accuracy for C7AIR", fontsize=24)
-plt.title("RF Prediction Accuracy for C7AIR", fontsize=24)
+plt.title("BayesB Prediction Accuracy for C7AIR", fontsize=24)
 plt.xlabel("Compression Level", fontsize=18)
 plt.ylabel("Accuracy (%)", fontsize=18)
 # plt.ylabel("Relative Accuracy (%)", fontsize=18)
@@ -55,7 +53,7 @@ plt.legend(loc='upper right', fontsize=12)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.savefig('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
-                       'C7AIR_PredictionAccuracy.png')
+                       'C7AIR_BayesB_PredictionAccuracy.png')
 # plt.savefig('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
 #                        'C7AIR_PredictionRelativeAccuracy.png')
 plt.show()

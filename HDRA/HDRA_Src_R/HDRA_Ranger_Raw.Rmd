@@ -48,7 +48,17 @@ hdra <- hdra.org[rownames(pheno), ]
 hdra <- hdra[, apply(hdra, 2, sd) > 0]
 dim(hdra)
 ```
-
+```{r}
+colnames(hdra)<- sprintf("V%05d", 1:ncol(hdra))
+head(colnames(hdra))
+tail(colnames(hdra))
+```
+```{r}
+head(hdra[,1:6])
+```
+```{r}
+write.csv(hdra, here("HDRA/HDRA_Data/HDRA_Raw",  "HDRA_Raw_359sel.csv"), quote = F)
+```
 # prepare independent variables (638,274 SNPs!)
 
 ```{r}
