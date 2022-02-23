@@ -105,11 +105,11 @@ accuracy_df_BayesB = pd.DataFrame(accuracy_df_BayesB, columns=['BayesB'], index=
 accuracy_df = pd.concat([accuracy_df_BayesB, accuracy_df_gblup, accuracy_df_ranger], axis=1, sort=False)
 print(accuracy_df)
 
-# # # accuracy_df.to_csv('../../../Data/C7AIR/C7AIR_Prediction_Accuracy/'
-# # #                         'C7AIR_PredictionAccuracy.csv')
-# #
-# ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6,
-#                  yerr=[C7AIR_SD_BayesB, C7AIR_SD_gblup, C7AIR_SD_RF])
+# accuracy_df.to_csv('../C7AIR_Data/C7AIR_Prediction_Accuracy/'
+#                         'C7AIR_PredictionAccuracy_RF_GBLUP_BayesB.csv')
+
+ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6,
+                 yerr=[C7AIR_SD_BayesB, C7AIR_SD_gblup, C7AIR_SD_RF])
 ax = accuracy_df.plot(kind="bar", figsize=(16, 12), rot=0, capsize=6)
 plt.title("Prediction Accuracy of BayesB, GBLUP and RF (C7AIR)", fontsize=24)
 plt.xlabel("Compression Level", fontsize=18)
