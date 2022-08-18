@@ -28,7 +28,7 @@ The **C7AIR_Data** folder contains six subfolders:
 **c.** **C7AIR_ModelMetaData**: This folder contains the generated data after training autoencoder networks.\
 **d.** **C7AIR_CompressedData**: This folder contains the combined compressed data achieved from different compression levels.\
 **e.** **C7AIR_Prediction_Result**: This folder contains the predicted result after severel compression.\
-**f.** **C7AIR_Prediction_Accuracy**: This folder contains the prediction accuracy plot.\
+**f.** **C7AIR_Prediction_Accuracy**: This folder contains the prediction accuracy plot.
 
 The **C7AIR_Src_Python** folder contains **python** source code of DeepCGP model.
 The **C7AIR_Src_R** folder contains **R** source code of DeepCGP model.
@@ -37,7 +37,7 @@ The **C7AIR_Src_R** folder contains **R** source code of DeepCGP model.
 **2.  Preprocessing Data**
 
 
-**a.** As the first step, we load all the required library and preprocess the **C7AIR_Genotype.csv** data using the python sript **C7AIR_DataProcessing.py**. For preprocessing, we split the data into several files. \
+**a.** As the first step, we load all the required library and preprocess the **C7AIR_Genotype.csv** data using the python script **C7AIR_DataProcessing.py**. For preprocessing, we split the data into several files. \
 **b.** We save all the encoded data into **C7AIR_OneHotEncode** folder. 
 
 
