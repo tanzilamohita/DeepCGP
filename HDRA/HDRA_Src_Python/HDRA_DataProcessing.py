@@ -5,6 +5,7 @@
 # Created Date: 20.10.2020
 # =========================================
 
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 from keras import Input
@@ -59,8 +60,13 @@ def OneHotEncode():
 
 print('Shape of data after pre-processing: ', OneHotEncode().shape)
 
+# np.savetxt('../HDRA_Data/HDRA_OneHot_All/HDRA_OneHot.csv', OneHotEncode(),
+#            delimiter=",", fmt='%1.0f')
+# np.savez('../HDRA_Data/HDRA_OneHot_All/HDRA_OneHot.npz', OneHotEncode())
+
 # splitting input data
-onehotinp = np.hsplit(OneHotEncode(), 100000)
+# onehotinp = np.hsplit(OneHotEncode(), 100000)
+onehotinp = np.hsplit(OneHotEncode(), 4)
 split_input = np.array(onehotinp)
 print(split_input[0])
 print("Splitting Input data: ", split_input[0].shape)
@@ -69,10 +75,12 @@ index = 0
 for i in range(len(split_input)):
     # print('Splitting input layer data: ', index, split_input[i].shape)
     # deep autoencoder
-    input = Input(shape=(split_input[i].shape[1],))
+    input = tf.keras.Input(shape=(split_input[i].shape[1],))
     print('Shape of input layer data: ', index, input.shape)
-    np.savetxt('../HDRA_Data/HDRA_OneHot/HDRA_OneHot_{}'.format(index)
-               + '.csv', split_input[i], delimiter=",", fmt='%1.0f')
+    # np.savetxt('../HDRA_Data/HDRA_OneHot/HDRA_OneHot_{}'.format(index)
+    #            + '.csv', split_input[i], delimiter=",", fmt='%1.0f')
+    np.savetxt('../HDRA_Data/HDRA_OneHot_All/HDRA_OneHot_Chunk_{}'.format(index)
+                + '.csv', split_input[i], delimiter=",", fmt='%1.0f')
     index += 1
 
 print((time.time() - start_time))
