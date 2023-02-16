@@ -1,0 +1,37 @@
+---
+title: "save HDRA2RDS"
+author: "岩田洋佳 hiroiwata@g.ecc.u-tokyo.ac.jp"
+date: "2/25/2021"
+output: html_document
+---
+
+# required packages
+
+```{r}
+require(ranger)
+require(gaston)
+require(here)
+require(tictoc)
+```
+
+# data preparation
+
+```{r}
+hdra.org <- read.csv(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT.csv"))
+```
+
+```{r}
+hdra <- hdra.org[,-1]
+rownames(hdra) <- hdra.org[,1]
+```
+
+```{r}
+saveRDS(hdra, here("dataHDRAwithPheno2", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002.rds"))
+```
+
+```{r}
+tic()
+hdra2 <- readRDS(here("dataHDRAwithPheno2", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002.rds"))
+toc()
+```
+

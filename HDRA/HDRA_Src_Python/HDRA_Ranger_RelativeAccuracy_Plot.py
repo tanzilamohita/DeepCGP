@@ -19,7 +19,10 @@ plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.xlabel("Compression Level", fontsize=18)
 plt.ylabel("Relative Accuracy (%)", fontsize=18)
+plt.legend(fontsize=15, ncol=2)
+# plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
+#                        'HDRA_Prediction_RelativeAccuracy_3 levels.png')
 plt.savefig('../HDRA_Data/HDRA_Prediction_Accuracy/'
-                       'HDRA_Prediction_RelativeAccuracy_3 levels.png')
+                       'HDRA_Prediction_RelativeAccuracy_3 levels_Legend_2.png')
 plt.show()
 

@@ -1,0 +1,67 @@
+---
+title: "convert vcf to csv data"
+author: "Hiro IWATA"
+date: "9/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+require(here)
+require(gaston)
+```
+
+# convert vcf to csv files
+
+We can use gaston package for this conversion.
+```{r}
+bm <- read.vcf(here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT.vcf.gz"), convert.chr = F)
+bm
+```
+The data is formated as a bed matrix.
+
+Convert to a matrix (with scores)
+```{r}
+gmat <- as.matrix(bm)
+head(gmat)[,1:10]
+```
+
+As you can see here each entry is scored as 0, 1, or 2. 
+
+1 is the heterozygous (conbinations of different nucleotides such as AT, AC, AG, TC, TG, CG).
+Here, we convert 1s to NAs (missing values).
+```{r}
+gmat.allele <- matrix(NA, nrow(gmat), ncol(gmat))
+for(i in 1:ncol(gmat.allele)) {
+  if(i %% 100000 == 0) print(i)
+  gmat.allele[gmat[,i] == 0, i] <- bm@snps$A1[i]
+  gmat.allele[gmat[,i] == 2, i] <- bm@snps$A2[i]
+}
+colnames(gmat.allele) <- colnames(gmat)
+rownames(gmat.allele) <- rownames(gmat)
+```
+
+Check the result
+```{r}
+head(gmat.allele)[,1:10]
+```
+
+If necessary, please convert the missing value, NA, with a specific character such as "N". 
+```{r}
+#gmat.allele[is.na(gmat.allele)] <- "N"
+```
+Save the matrix to a rds file.
+```{r}
+saveRDS(gmat.allele, here("HDRA/HDRA_Data/HDRA_Raw", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT-002.rds"))
+```
+
+Save the matrix to a csv file.
+```{r}
+write.csv(gmat.allele, here("dataHDRA", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT.csv"), quote = F)
+```
+
+The information of SNPs and lines may also be necessary. Save those data to files.
+```{r}
+write.csv(bm@snps, here("dataHDRA", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT.snps.csv"), quote = F)
+write.csv(bm@ped, here("dataHDRA", "HDRA-G6-4-RDP1-RDP2-NIAS.AGCT.ped.csv"), quote = F)
+```
+
